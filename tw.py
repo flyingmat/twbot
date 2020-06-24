@@ -27,4 +27,7 @@ time.sleep(5)
 
 while True:
     driver.get("https://uk49.tribalwars.co.uk/game.php?village=11304&screen=place&mode=scavenge")
-    time.sleep(10 + random.randint(0,15))
+    print("Scavenging page loaded! Waiting...")
+    spear_amount = int(driver.find_element_by_xpath("//a[@class='units-entry-all squad-village-required' and @data-unit='spear']").text[1:-1])
+    print("You have {} spears.".format(spear_amount))
+    time.sleep(10 + random.randint(0,15)) # EVASION 100
