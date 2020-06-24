@@ -36,6 +36,33 @@ def scavenge(driver):
     time.sleep(1 + random.randint(0,5))
     # TODO: Click the LVL1 scavenge button
 
+# Recruit the maximum amount of spears possible
+def recruit(driver):
+    driver.get("https://uk49.tribalwars.co.uk/game.php?village=11304&screen=barracks")
+    print("Barracks page loaded! Waiting...")
+
+    time.sleep(10 + random.randint(0,15)) # EVASION 100
+
+    # Recruit max amount of spears possible
+    driver.find_element_by_xpath("//a[@id='spear_0_a']").click()
+    time.sleep(1 + random.randint(0,5))
+    driver.find_element_by_xpath("//input[@class='btn btn-recruit']").click()
+
+# Upgrade a building to the next level
+def upgrade(driver, building):
+    driver.get("https://uk49.tribalwars.co.uk/game.php?village=11304&screen=main")
+
+    time.sleep(5 + random.randint(0,5))
+
+    building_row = driver.find_element_by_xpath("//tr[@id='main_buildrow_{}']".format(building))
+    button_build = row.find_element_by_xpath("//a[@class='btn btn-build']")
+
+    if button_build.get_attribute("style") != "display:none":
+        button_build.click()
+        return True
+    else:
+        return False
+
 username = input("Enter your username: ")
 password = input("Enter your password: ")
 
@@ -61,4 +88,14 @@ driver.find_element_by_xpath("//span[@class='world_button_active' and text()='Wo
 time.sleep(5)
 
 while True:
+    # Scavenge first
     scavenge(driver)
+    time.sleep(5 + random.randint(0, 10))
+
+    # If farm doesn't need upgrading
+    if int(driver.find_element_by_xpath("//span[@id='pop_max_label'")) - int(driver.find_element_by_xpath("//span['id='pop_current_label]")) >= 50:
+        # Recruit more spears
+        recruit(driver)
+    else:
+        # Upgrade farm
+        upgrade(driver, "farm")
